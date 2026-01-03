@@ -1,0 +1,178 @@
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+.card {
+  padding: 2em;
+}
+
+#app {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
+/* === 1. 全局布局适配 === */
+.container {
+  display: grid;
+  gap: 20px;
+  /* 默认大屏：3列布局 (侧边栏占 1/4) */
+  grid-template-columns: repeat(3, 1fr) 300px;
+  grid-template-areas: "main main main sidebar";
+}
+
+/* 侧边栏样式优化 */
+.sidebar {
+  grid-area: sidebar;
+  /* 可选：大屏时固定侧边栏 */
+  position: sticky;
+  top: 20px;
+  height: fit-content;
+}
+
+.article-list {
+  grid-area: main;
+  display: grid;
+  /* 大屏文章列表 3 列 */
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+/* === 2. 小屏适配 (MD 以下 < 768px) === */
+@media (max-width: 768px) {
+  .container {
+    /* 改为单列，侧边栏自动排在下方 */
+    grid-template-columns: 1fr;
+    grid-template-areas:
+            "main"
+            "sidebar";
+  }
+
+  .article-list {
+    /* 文章列表自动适配 1-2 列 */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+
+  /* 导航栏变形：隐藏完整搜索框，显示图标 */
+  .nav-search-full { display: none !important; }
+  .nav-search-icon { display: block !important; }
+
+  /* 隐藏文字菜单，显示汉堡按钮 */
+  .nav-links {
+    display: none; /* JS 控制点击后显示 */
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    background: white;
+    flex-direction: column;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    z-index: 99;
+  }
+  .nav-links.active { display: flex; } /* JS 切换此 class */
+  .hamburger-btn { display: block !important; }
+}
+
+/* === 3. 大屏复原 (防止样式覆盖) === */
+@media (min-width: 769px) {
+  .nav-search-icon, .hamburger-btn { display: none !important; }
+  .nav-links { display: flex !important; }
+}
+/* === 卡片悬停：上移 + 投影加深 === */
+.card {
+  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s ease;
+  /* 初始轻微投影 */
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.card:hover {
+  /* 上移 5px */
+  transform: translateY(-5px);
+  /* 投影加深并扩散 */
+  box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+}
+
+/* === 轮播/弹窗：淡入淡出 === */
+/* 通用淡入动画类 */
+.fade-in {
+  animation: fadeInOpacity 0.5s ease-in-out;
+}
+
+@keyframes fadeInOpacity {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* 如果你的轮播图是手动切换 class，加上这个 transition */
+.carousel-item {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+.carousel-item.active {
+  opacity: 1;
+}
